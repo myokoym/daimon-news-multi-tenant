@@ -10,6 +10,8 @@ gem 'rabl'
 gem 'sass-rails'
 gem 'uglifier'
 
+gem 'rack-subdomain', require: 'rack/subdomain'
+
 group :development, :test do
   gem 'byebug'
 end
