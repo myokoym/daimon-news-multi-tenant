@@ -25,7 +25,7 @@
   = f.file_field :logo_image
   = f.form_group do
     = f.label :remove_image
-    = f.checkbox :remove_image
+    = f.check_box :remove_image
   - if @site.logo_image.present?
     = f.form_group do
       = image_tag @site.logo_image_url, height: 80
