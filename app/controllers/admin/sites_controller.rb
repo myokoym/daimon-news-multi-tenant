@@ -65,6 +65,7 @@ class Admin::SitesController < Admin::ApplicationController
       :ad_slot,
       :opened,
       :logo_image,
+      :remove_logo_image,
       :favicon_image,
       :mobile_favicon_image,
       :head_tag,
