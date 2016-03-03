@@ -43,7 +43,9 @@ class PostSearcher
       if query.keywords.present?
         full_text_search = record.match(query.keywords) do |target|
           (target.index('Terms.Posts_title') * 10) |
-            target.index('Terms.Posts_content')
+            target.index('Terms.Posts_content') |
+            target.index('Terms.Posts_participants_name') |
+            target.index('Terms.Posts_participants_description')
         end
         conditions << full_text_search
       end

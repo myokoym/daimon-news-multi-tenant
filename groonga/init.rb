@@ -17,6 +17,7 @@ Groonga::Schema.define do |schema|
                       type: :hash,
                       key_type: :uint32) do |table|
     table.short_text 'name'
+    table.text 'description'
   end
 
   schema.create_table('Posts',
@@ -47,6 +48,7 @@ Groonga::Schema.define do |schema|
                       default_tokenizer: 'TokenMecab') do |table|
     table.index 'Posts.title'
     table.index 'Posts.content'
+    table.index 'Posts.participants'
   end
 
   schema.create_table('Terms',
@@ -56,6 +58,7 @@ Groonga::Schema.define do |schema|
                       default_tokenizer: 'TokenBigram') do |table|
     table.index 'Posts.title'
     table.index 'Posts.content'
+    table.index 'Posts.participants'
   end
 
   schema.create_table('Times',
