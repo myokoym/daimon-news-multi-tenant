@@ -34,7 +34,7 @@ end
 
 if Post.table_exists?
   indexer = PostIndexer.new
-  Post.includes(:category, credits: [:participants, :credit_roles]).find_each do |post|
+  Post.includes(:category, credits: [:participant, :role]).find_each do |post|
     indexer.add(post)
   end
 end
