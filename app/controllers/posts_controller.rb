@@ -1,8 +1,6 @@
 class PostsController < ApplicationController
   helper_method :current_category
 
-  before_action :prepare_search, only: %i(show)
-
   def show
     @post = current_site.posts.published.find_by!(public_id: params[:id])
 

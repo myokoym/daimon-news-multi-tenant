@@ -24,9 +24,4 @@ class ApplicationController < ActionController::Base
   def authorize_user!
     head :forbidden unless current_user.admin? || current_user.editor_of?(current_site)
   end
-
-  def prepare_search
-    @query = Query.new(params[:query])
-    @query.site_id = current_site.id
-  end
 end
