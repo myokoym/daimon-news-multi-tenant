@@ -8,8 +8,6 @@ class ApplicationController < ActionController::Base
     before_action :authorize_user!, if: :current_user
   end
 
-  before_action :prepare_search
-
   include CurrentResouceHelper
 
   private
