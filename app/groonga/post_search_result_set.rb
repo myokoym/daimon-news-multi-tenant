@@ -16,7 +16,7 @@ class PostSearchResultSet
   end
 
   def posts
-    @posts ||= @site.posts.includes(credits: [:participant]).published.where(id: searched_post_ids).order_by_ids(searched_post_ids).page(@page).per(50)
+    @posts ||= Kaminari.paginate_array(sort_by_score(@site.posts.includes(credits: [:participant]).published.where(id: searched_post_ids))).page(@page).per(50)
   end
 
   def snippet(text, html_options = {})
@@ -38,5 +38,13 @@ class PostSearchResultSet
       :html_escape => true,
     }
     @groonga_posts.expression.snippet([open_tag, close_tag], options)
+  end
+
+  def sort_by_score(posts)
+    posts.sort_by {|post|
+      @groonga_posts.select {|groonga_post|
+        groonga_post.id == post.id
+      }.first.score
+    }
   end
 end
