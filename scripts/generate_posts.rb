@@ -30,7 +30,7 @@ site1.posts.create!(
   category: site1.categories.find_by!(slug: "category2"),
 )
 
-size = ARGV[0] || 100
+size = (ARGV[0] || 100).to_i
 size.times do |i|
   i += 100
 
