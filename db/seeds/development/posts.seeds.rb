@@ -28,7 +28,7 @@ after "development:sites", "development:categories" do
     category: site1.categories.find_by!(slug: "category2"),
   )
 
-  100.times do |i|
+  1000.times do |i|
     i += 100
 
     site1.posts.create!(
