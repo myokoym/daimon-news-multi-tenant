@@ -1,1 +1,1 @@
-web: (vmstat 1 | tee vmstat.log &) && ps aux && bundle exec ruby groonga/init.rb && ps aux && bundle exec puma -C config/puma.rb && ps aux
+web: (vmstat 1 | tee vmstat.log &) && (while true; do ps aux; sleep 1; done &) && bundle exec ruby groonga/init.rb && bundle exec puma -C config/puma.rb
