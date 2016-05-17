@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module NewsService
+module DaimonNews
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -28,5 +28,20 @@ module NewsService
       g.assets false
       g.scaffold_controller = :scaffold_controller
     end
+
+    class UnknownErrorHandler
+      def initialize(app)
+        @app = app
+      end
+
+      def call(env)
+        @app.call(env)
+      rescue
+        p env
+        raise
+      end
+    end
+
+    config.middleware.insert_before Rack::MethodOverride, UnknownErrorHandler
   end
 end

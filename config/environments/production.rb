@@ -46,7 +46,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -58,7 +58,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  config.action_controller.asset_host = ENV['ASSET_HOST'] if ENV['ASSET_HOST']
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -103,10 +103,17 @@ Rails.application.configure do
     end
   end
 
-  config.middleware.use DigestAuthUnless, 'daimon', ENV['DIGEST_AUTH_SECRET_KEY'], (-> (env) { env['PATH_INFO'] =~ %r{\A/hooks/} }) do |username|
+  config.middleware.use DigestAuthUnless, 'daimon', ENV['DIGEST_AUTH_SECRET_KEY'], (-> (env) { env['PATH_INFO'] =~ %r{\A/hooks/} || env['PATH_INFO'] =~ %r{\A/assets/} }) do |username|
     {ENV['DIGEST_AUTH_USERNAME'] => ENV['DIGEST_AUTH_PASSWORD']}[username]
   end if ENV['DIGEST_AUTH_SECRET_KEY']
 
   allowd_ips = ENV['ADMIN_IP_ADDRESSES'].split(',')
   config.middleware.use Rack::Access, '/admin' => allowd_ips, '/users' => allowd_ips, '/editor' => allowd_ips
+
+  config.middleware.insert_before 0, 'Rack::Cors' do
+    allow do
+      origins '*'
+      resource '/assets/*', headers: :any, methods: %i(get post options)
+    end
+  end
 end

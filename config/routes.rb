@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   namespace :admin do
     root 'welcome#index'
 
-    resources :sites, except: :destroy
+    resources :sites, except: :destroy do
+      resource :editors, only: %i(edit update), controller: :site_editors
+    end
     resources :users, except: :show
   end
 
@@ -22,10 +24,13 @@ Rails.application.routes.draw do
       end
     end
     resources :images, only: :create
-    resources :authors
+    resources :participants
+    resources :credit_roles
   end
 
   concern :site do
+    get 'search', controller: 'search'
+
     resources :posts, only: %i(show), constraints: {id: /\d+/}, path: '/'
     resources :categories, only: %i(show), path: 'category'
 

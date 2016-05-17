@@ -1,6 +1,6 @@
 class Editor::PostsController < Editor::ApplicationController
   def index
-    @posts = posts.preload(:category).order(:public_id => :desc).page(params[:page]).per(50)
+    @posts = posts.preload(:category).order_by_recently.page(params[:page]).per(50)
   end
 
   def show
@@ -48,12 +48,12 @@ class Editor::PostsController < Editor::ApplicationController
 
     @pages =
       if params[:all]
-        @post.pages
+        Kaminari.paginate_array(@post.pages).page(1).per(@post.pages.size)
       else
         Kaminari.paginate_array(@post.pages).page(params[:page]).per(1)
       end
 
-    render 'posts/show', layout: 'application'
+    render template: 'posts/show', layout: 'preview'
   end
 
   private
@@ -64,12 +64,18 @@ class Editor::PostsController < Editor::ApplicationController
 
   def post_params
     params.require(:post).permit(
+      :public_id,
       :title,
       :body,
       :category_id,
-      :author_id,
       :thumbnail,
-      :published_at
+      :published_at,
+      :credits_attributes => [
+        :id,
+        :participant_id,
+        :credit_role_id,
+        :_destroy
+      ]
     )
   end
 end
